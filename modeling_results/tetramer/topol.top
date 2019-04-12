@@ -1,0 +1,16 @@
+;Forcefield
+#include "/home/bcoscia/PycharmProjects/LLC_Membranes/LLC_Membranes/setup/../top/Forcefields/gaff/gaff.itp"
+
+;TMR Topology
+#include "TMR.itp"
+
+;TCM Topology
+#include "TCM.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+TMR                1
+TCM              797
