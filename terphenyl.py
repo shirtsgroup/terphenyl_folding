@@ -1,4 +1,5 @@
 from shutil import copytree, copyfile
+from zipfile import ZipFile
 import subprocess, datetime
 import os, statistics
 import pymbar
@@ -8,24 +9,19 @@ import mdtraj as md
 
 polymer_name = "tetramer"
 date = str(datetime.datetime.now()).split()[0]
-build_input_files = True
-run_minimization = False
-equilibrate = False
+run_minimization = True
+equilibrate = True
 run_simulation = True
-run_directory = str(str(polymer_name)+'/fresh_run_'+str(date))
+run_directory = str(str(polymer_name)+'/run_'+str(date))
 
 if not os.path.exists(run_directory): 
   os.mkdir(run_directory)
 
-if build_input_files:
-  if not os.path.exists(str(str(run_directory)+'/input_files')):
+if not os.path.exists(str(str(run_directory)+'/input_files')):
     copytree('tetramer/input_files',str(str(run_directory)+'/input_files'))
-  if not os.path.exists(str(str(run_directory)+'/input_files/gaff')):
+if not os.path.exists(str(str(run_directory)+'/input_files/gaff')):
     copytree('gaff',str(str(run_directory)+'/input_files/gaff'))
-  os.chdir(str(str(run_directory)+'/input_files'))
-# Make the topology file
-  subprocess.run(["gmx","pdb2gmx","-f","tetramer.pdb","-o","em"])
-  exit()
+os.chdir(str(str(run_directory)+'/input_files'))
 
 if run_minimization:
 # Setup an energy minimization of the initial structure guess
@@ -43,7 +39,21 @@ if run_simulation:
 # Setup a Parrinello-Rahman pressure control simulation run
   subprocess.run(["gmx","grompp","-f","npt.mdp","-p","topol.top","-c","berendsen.gro","-o","npt"])
   
+# Compress large files
+files_list = []
+for path, subdirs, files in os.walk(str(str(run_directory)+'/input_files')):
+    for name in files:
+        filesList.append(os.path.join(path, name))
 
+for file in filesList:
+    # Getting the size in a variable
+    fileSize = os.path.getsize(str(file))
+
+    # Print the files that meet the condition
+    if int(fileSize) >= int(1.0e8):
+      shutil.make_archive(str(file),"zip",file)
+
+print(subprocess.call(["find",".","-name","'*.zip'"]))
 
 exit()
 
@@ -114,7 +124,23 @@ for monomer_index in range(polymer_length):
     phenyl_coordinates_list = [lowest_energy_trajectory.xyz[0][i] for i in phenyl]
     com_coordinates = [float(sum([float(phenyl_coordinates_list[i][j]) for i in range(6)])/6.0) for j in range(3)]
     com_coordinates_list[str(phenyl_index+1)].append(com_coordinates)
-
+    
 # Calculate the hydrogen bond distance for 
+
+# Compress large files
+filesList = []
+for path, subdirs, files in os.walk(str(str(run_directory)+'/input_files')):
+    for name in files:
+        filesList.append(os.path.join(path, name))
+
+for file in filesList:
+    # Getting the size in a variable
+    fileSize = os.path.getsize(str(file))
+    print(fileSize)
+
+    # Print the files that meet the condition
+    if int(fileSize) >= int(1.0e8):
+      print(file)
+      shutil.make_archive(str(file),"zip",file)
 
 exit()
