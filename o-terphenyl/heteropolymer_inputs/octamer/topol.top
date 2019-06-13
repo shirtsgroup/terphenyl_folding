@@ -1,0 +1,16 @@
+;Forcefield
+#include "/home/bcoscia/PycharmProjects/LLC_Membranes/LLC_Membranes/setup/../top/Forcefields/gaff/gaff.itp"
+
+;OCT Topology
+#include "OCT.itp"
+
+;TCM Topology
+#include "TCM.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+OCT                1
+TCM             1384

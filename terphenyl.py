@@ -1,3 +1,7 @@
+# In order to run as expected, this script requires that the system
+# contain an installed copy of GROMACS, available for reference
+# with the standard "gmx ..." syntax
+import shutil
 from shutil import copytree, copyfile
 from zipfile import ZipFile
 import subprocess, datetime
@@ -7,21 +11,68 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 import mdtraj as md
 
-polymer_name = "tetramer"
-date = str(datetime.datetime.now()).split()[0]
-run_minimization = True
-equilibrate = True
+# Begin user input
+fresh_run = True # Delete old files
+polymer_name = "o-terphenyl"
+polymer_length = "monomer"
+polymer_abbreviation = ['M','O','N']
+parameterize = True
+minimize_polymer = True
+equilibrate_polymer_in_solvent = True
 run_simulation = True
-run_directory = str(str(polymer_name)+'/run_'+str(date))
+# End user input
+
+date = str(datetime.datetime.now()).split()[0]
+run_directory = str(str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date))
 
 if not os.path.exists(run_directory): 
   os.mkdir(run_directory)
 
-if not os.path.exists(str(str(run_directory)+'/input_files')):
-    copytree('tetramer/input_files',str(str(run_directory)+'/input_files'))
+if os.path.exists(str(str(run_directory)+'/input_files')):
+  if fresh_run:
+    shutil.rmtree(str(str(run_directory)+'/input_files'))
+    copytree(str(str(polymer_name)+'/'+str(polymer_length)+'/input_files'),str(str(run_directory)+'/input_files'))
+  else:
+    copytree(str(str(polymer_name)+'/'+str(polymer_length)+'/input_files'),str(str(run_directory)+'/input_files'))
 if not os.path.exists(str(str(run_directory)+'/input_files/gaff')):
     copytree('gaff',str(str(run_directory)+'/input_files/gaff'))
 os.chdir(str(str(run_directory)+'/input_files'))
+
+if parameterize:
+# Parameterize our polymer using 'antechamber', from AmberTools.
+#
+# We start with a PDB file:
+  pdb_file = str(str(polymer_length)+".pdb")
+  copyfile(str("../../../"+str(polymer_length)+"/input_files/"+pdb_file),pdb_file)
+# We parameterize the PDB structure using a BASH script written by Ben Coscia: "https://github.com/shirtsgroup/useful-scripts/blob/master/Paramaterization/GAFF/param.sh"
+#  print(os.getcwd())
+  copyfile("../../../../gaff/param.sh","param.sh")
+  copyfile("../../../../gaff/acpype.py","acpype.py")
+  copyfile("../../../../gaff/insertmol2charges.py","insertmol2charges.py")
+  copyfile("../../../../gaff/em.mdp","em.mdp")
+  copyfile("../../../../gaff/anneal.mdp","anneal.mdp")
+# Replace the variable keyword '$NAME' in param.sh with the name of the current polymer length
+  with open("param.sh", "rt") as fin:
+    with open("new_param.sh", "wt") as fout:
+        for line in fin:
+            fout.write(line.replace('$NAME', polymer_length))
+  os.rename("new_param.sh","param.sh")
+# Place the residue name in the input PDB file residue name columns
+  with open(pdb_file, "rt") as fin:
+    with open(str("new_"+pdb_file), "wt") as fout:
+        for line in fin:
+            line_list = [char for char in line]
+            line_start = ''.join(line_list[1:6])
+            if line_start == 'HETATM' or line_start == 'ATOM  ':
+              line_list[18:20] = polymer_abbreviation
+              line = ''.join(line_list)
+            fout.write(line)
+  os.rename(str("new_"+pdb_file),pdb_file)
+  subprocess.run(["chmod","+x","param.sh"])
+  subprocess.run(["./param.sh",pdb_file])
+# Remove unnecessary sections from the GROMACS ".top" file
+  
+  exit()
 
 if run_minimization:
 # Setup an energy minimization of the initial structure guess
@@ -29,6 +80,7 @@ if run_minimization:
 # Run the energy minimization
   subprocess.run(["gmx","mdrun","-v","-deffnm","em"])
   subprocess.run(["gmx","trjconv","-f","em.trr","-o","em.pdb"])
+  exit()
 if equilibrate:
 # Setup an equilibration run with Berendsen barostat
   subprocess.run(["gmx","grompp","-f","berendsen.mdp","-p","topol.top","-c","em.gro","-o","berendsen"])
