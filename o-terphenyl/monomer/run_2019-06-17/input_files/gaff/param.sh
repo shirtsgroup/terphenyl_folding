@@ -11,7 +11,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"  # loc
 
 name='$NAME' # name of molecule. This name will carry through to output
 nc=0  # net charge
-res='MON' # name of residue being made, NOTE: This must match the residue in the .pdb file or you will get errors
+res='$RES' # name of residue being made, NOTE: This must match the residue in the .pdb file or you will get errors
 anneal='no'  # change to 'yes' if you want a thermal annealing process carried out after energy minimization
 input_path="${SCRIPT_DIR}"  # location of em.mdp and anneal.mdp files
 
