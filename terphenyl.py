@@ -1,6 +1,7 @@
 # In order to run as expected, this script requires that the system
 # contain an installed copy of GROMACS, available for reference
 # with the standard "gmx ..." syntax
+import terphenyl_folding
 from terphenyl_folding.src.simulation import *
 import datetime
 import os, statistics
@@ -15,7 +16,7 @@ polymer_name = "o-terphenyl"
 polymer_length = "monomer"
 polymer_abbreviation = ['M','O','N']
 polymer_code = ''.join(polymer_abbreviation)
-make_parameter_files = False
+make_parameter_files = True
 add_solvent = True
 run_minimization = True
 run_equilibration = True
@@ -23,8 +24,9 @@ run_simulation = True
 # End user input
 
 date = str(datetime.datetime.now()).split()[0]
+input_directory = str(str(os.path.abspath(terphenyl_folding.__file__))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
 run_directory = str(str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date))
-pdb_file = str(str(polymer_length)+".pdb")
+pdb_file = str(str(input_directory)+"/"+str(polymer_length)+".pdb")
 
 build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
 os.chdir(str(str(run_directory)+'/input_files'))
@@ -35,8 +37,9 @@ if make_parameter_files:
 
 if add_solvent:
 # Add solvent to a simulation box containing the system
-  solvate(solvent_density=0.6)
+  solvate(input_pdb="em2.gro",solvent_density=0.6)
 
+exit()
 if run_minimization:
 # Minimize our initial structure
   minimize()

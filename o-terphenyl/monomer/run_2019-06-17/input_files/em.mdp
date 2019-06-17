@@ -2,4 +2,5 @@
 ; grompp -f em.mdp -c MOL_GMX.gro -p MOL_GMX.top -o em.tpr -v
 ; mdrun -v -deffnm em
 integrator               = steep
-nsteps                   = 500
+nsteps                   = 5000
+emtol                    = 1.0

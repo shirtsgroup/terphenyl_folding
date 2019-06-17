@@ -25,7 +25,7 @@ def build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
         terphenyl_top = os.path.join(current_file, '../')
         template_input_files = str(str(polymer_name)+'/'+str(polymer_length)+'/input_files')
         input_files = str(str(run_directory)+'/input_files')
-        gaff_directory = str(str(terphenyl_top)+'../gaff')
+        gaff_directory = str(str(terphenyl_top)+'/gaff')
         gaff_run_directory = str(str(run_directory)+'/input_files/gaff')
         if os.path.exists(input_files):
           if fresh_run:
@@ -36,10 +36,11 @@ def build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
         if not os.path.exists(str(str(run_directory)+'/input_files/gaff')):
           copytree(gaff_directory,gaff_run_directory)
         pdb_file = str(str(polymer_length)+".pdb")
+        solvent_pdb_file_path = str(str(terphenyl_top)+"/"+str(polymer_name)+"/"+str(polymer_length)+"/input_files/solvent.pdb")
         pdb_path = str(str(terphenyl_top)+"/"+str(polymer_name)+"/"+str(polymer_length)+"/input_files/"+pdb_file)
         run_pdb_path = pdb_file
         copyfile(pdb_path,run_pdb_path)
-
+        copyfile(solvent_pdb_file_path,str(str(input_files)+"/solvent.pdb"))
         return
 
 def parameterize(polymer_length,polymer_code,polymer_abbreviation,pdb_file):
@@ -98,7 +99,7 @@ def minimize():
         subprocess.run(["gmx","trjconv","-f","em.trr","-o","em.pdb"])
         return
 
-def solvate(solvent_density=0.5):
+def solvate(input_pdb,solvent_density=0.5):
         """
 
         Parameters
@@ -106,10 +107,7 @@ def solvate(solvent_density=0.5):
 
         """
         # Build a simulation box and fill it with solvent
-        subprocess.run(["gmx","grompp","-f","berendsen.mdp","-p","topol.top","-c","em.gro","-o","berendsen"])
-        # Run the equilibration
-        subprocess.run(["gmx","mdrun","-v","-deffnm","berendsen"])
-        subprocess.run(["gmx","trjconv","-f","berendsen.trr","-o","berendsen.pdb"])
+        subprocess.run(["gmx","solvate","-cp",input_pdb,"-cs","solvent.pdb","-p","topol.top","-o","solvated.gro"])
 
         return
 
