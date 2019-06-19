@@ -43,7 +43,7 @@ def build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
         copyfile(solvent_pdb_file_path,str(str(input_files)+"/solvent.pdb"))
         return
 
-def parameterize(polymer_length,polymer_code,polymer_abbreviation,pdb_file):
+def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         """
 
         Parameters
@@ -71,7 +71,8 @@ def parameterize(polymer_length,polymer_code,polymer_abbreviation,pdb_file):
 
         # Place the residue name in the input PDB file residue name columns
         with open(pdb_file, "rt") as fin:
-          with open(str("new_"+pdb_file), "wt") as fout:
+          new_pdb_file = str(str(run_directory)+"/input_files/"+str(pdb_file.split('.pdb')[0].split('input_files/')[1]+".pdb"))
+          with open(new_pdb_file, "wt") as fout:
               for line in fin:
                   line_list = [char for char in line]
                   line_start = ''.join(line_list[1:6])
@@ -79,7 +80,6 @@ def parameterize(polymer_length,polymer_code,polymer_abbreviation,pdb_file):
                     line_list[18:20] = polymer_abbreviation
                     line = ''.join(line_list)
                   fout.write(line)
-        os.rename(str("new_"+pdb_file),pdb_file)
         subprocess.run(["chmod","+x","param.sh"])
         subprocess.run(["./param.sh",pdb_file])
 
