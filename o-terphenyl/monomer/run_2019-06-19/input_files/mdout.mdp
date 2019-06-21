@@ -1,10 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: unknown (1000)
-;	On host: Louie
-;	At date: Wed Jun 19 17:29:23 2019
-
+;	By user: gmeek (0)
+;	On host: crestone
+;	At date: Wed Jun 19 21:23:18 2019
 ;
+;	Created by:
+;	                     :-) GROMACS - gmx grompp, 2019.2 (-:
+;	
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /home/gmeek/Foldamers/terphenyl_folding/o-terphenyl/monomer/run_2019-06-19/input_files
+;	Command line:
+;	  gmx grompp -f em.mdp -p MON.top -c MON_new.pdb -o em2
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -85,8 +92,6 @@ verlet-buffer-tolerance  = 0.005
 ; nblist cut-off        
 rlist                    = 1
 ; long-range cut-off for switched potentials
-rlistlong                = -1
-nstcalclr                = -1
 
 ; OPTIONS FOR ELECTROSTATICS AND VDW
 ; Method for doing electrostatics
@@ -122,31 +127,7 @@ ewald-rtol-lj            = 0.001
 lj-pme-comb-rule         = Geometric
 ewald-geometry           = 3d
 epsilon-surface          = 0
-
-; IMPLICIT SOLVENT ALGORITHM
-implicit-solvent         = No
-
-; GENERALIZED BORN ELECTROSTATICS
-; Algorithm for calculating Born radii
-gb-algorithm             = Still
-; Frequency of calculating the Born radii inside rlist
-nstgbradii               = 1
-; Cutoff for Born radii calculation; the contribution from atoms
-; between rlist and rgbradii is updated every nstlist steps
-rgbradii                 = 1
-; Dielectric coefficient of the implicit solvent
-gb-epsilon-solvent       = 80
-; Salt concentration in M for Generalized Born models
-gb-saltconc              = 0
-; Scaling factors used in the OBC GB model. Default values are OBC(II)
-gb-obc-alpha             = 1
-gb-obc-beta              = 0.8
-gb-obc-gamma             = 4.85
-gb-dielectric-offset     = 0.009
-sa-algorithm             = Ace-approximation
-; Surface tension (kJ/mol/nm^2) for the SA (nonpolar surface) part of GBSA
-; The value -1 will set default value for Still/HCT/OBC GB-models.
-sa-surface-tension       = -1
+implicit-solvent         = no
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
@@ -194,9 +175,6 @@ SAoff                    =
 SAsteps                  = 
 ; Scale factor for MM charges
 MMChargeScaleFactor      = 1
-; Optimization of QM subsystem
-bOPT                     = 
-bTS                      = 
 
 ; SIMULATED ANNEALING  
 ; Type of annealing for each temperature group (no/single/periodic)
@@ -250,6 +228,9 @@ wall-ewald-zfac          = 3
 
 ; COM PULLING          
 pull                     = no
+
+; AWH biasing          
+awh                      = no
 
 ; ENFORCED ROTATION    
 ; Enforced rotation: No or Yes
@@ -322,24 +303,9 @@ simulated-tempering-scaling = geometric
 sim-temp-low             = 300
 sim-temp-high            = 300
 
-; Electric fields      
-; Format is number of terms (int) and for all terms an amplitude (real)
-; and a phase angle (real)
-E-x                      = 
-; Time dependent (pulsed) electric field. Format is omega, time for pulse
-; peak, and sigma (width) for pulse. Sigma = 0 removes pulse, leaving
-; the field to be a cosine function.
-E-xt                     = 
-E-y                      = 
-E-yt                     = 
-E-z                      = 
-E-zt                     = 
-
 ; Ion/water position swapping for computational electrophysiology setups
 ; Swap positions along direction: no, X, Y, Z
 swapcoords               = no
-
-; AdResS parameters    
 adress                   = no
 
 ; User defined thingies
@@ -353,3 +319,11 @@ userreal1                = 0
 userreal2                = 0
 userreal3                = 0
 userreal4                = 0
+; Electric fields
+; Format for electric-field-x, etc. is: four real variables:
+; amplitude (V/nm), frequency omega (1/ps), time for the pulse peak (ps),
+; and sigma (ps) width of the pulse. Omega = 0 means static field,
+; sigma = 0 means no pulse, leaving the field to be a cosine function.
+electric-field-x         = 0 0 0 0
+electric-field-y         = 0 0 0 0
+electric-field-z         = 0 0 0 0

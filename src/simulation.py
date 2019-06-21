@@ -57,11 +57,8 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         current_file = os.path.abspath(os.path.dirname(__file__))
         terphenyl_top = os.path.join(current_file, '../')
         gaff_directory = str(str(terphenyl_top)+"/gaff")
-        topol_old = str(str(run_directory)+"/input_files/"+str(pdb_file.split('.pdb')[0].split('input_files/')[1]+".pdb"))
-        topol_new = str(str(run_directory)+"/input_files/"+str(pdb_file.split('.pdb')[0].split('input_files/')[1]+".pdb"))
-        print(topol_old)
-        print(topol_new)
-        exit()
+        topol_old = str(str(pdb_file.split(str(str(polymer_length)+'.pdb'))[0])+"topol.top")
+        topol_new = str(str(run_directory)+"/input_files/topol.top")
         copyfile(topol_old,topol_new)
         copyfile(str(str(gaff_directory)+"/param.sh"),"param.sh")
         copyfile(str(str(gaff_directory)+"/acpype.py"),"acpype.py")
@@ -113,7 +110,9 @@ def solvate(input_pdb,solvent_density=0.5):
 
         """
         # Build a simulation box and fill it with solvent
+        print(os.getcwd())
         subprocess.run(["gmx","solvate","-cp",input_pdb,"-cs","solvent.pdb","-p","topol.top","-o","solvated.gro"])
+        exit()
 
         return
 

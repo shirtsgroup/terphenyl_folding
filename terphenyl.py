@@ -2,6 +2,7 @@
 # contain an installed copy of GROMACS, available for reference
 # with the standard "gmx ..." syntax
 from terphenyl_folding.src.simulation import *
+from terphenyl_folding.src.analysis import *
 import datetime
 import os, statistics
 import pymbar
@@ -10,16 +11,16 @@ import numpy as np
 import mdtraj as md
 
 # Begin user input
-fresh_run = True # Delete old files
 polymer_name = "o-terphenyl"
 polymer_length = "monomer"
 polymer_abbreviation = ['M','O','N']
 polymer_code = ''.join(polymer_abbreviation)
-make_parameter_files = True
+make_parameter_files = False
 add_solvent = True
 run_minimization = True
 run_equilibration = True
 run_simulation = True
+analyze_simulation_data = True
 # End user input
 
 date = str(datetime.datetime.now()).split()[0]
@@ -51,6 +52,23 @@ if run_simulation:
 # Run a Parrinello-Rahman pressure control simulation run
   simulate() 
   compress_large_files(run_directory) 
+
+if analyze_simulation_data:
+# Define the paths for our simulation output files
+  gmx_simulation_energies = str(str(run_directory)+"/"+str(simulation)+".edr")
+  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+".xtc")
+# Read in simulation data
+  traj = read_trajectory(pdb_file,gmx_trajectory)
+  energies = read_energies(gmx_simulation_energies)
+# Get equilibrium frames, and data
+  equilibrium_frames = get_equilibrium_frames(energies)
+  energies = energies[equilibrium_frames]
+  traj = traj[equilibrium_frames]
+# Analyze trajectory to get internal coordinates of interest
+  torsion_definitions = get_torsion_definitions(pdb_file)
+
+if archive:
+  compress_large_files(run_directory)
 
 exit()
 
