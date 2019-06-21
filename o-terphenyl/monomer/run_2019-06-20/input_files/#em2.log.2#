@@ -30,7 +30,7 @@ GROMACS:      gmx mdrun, version 2019.2
 Executable:   /usr/local/gromacs/bin/gmx
 Data prefix:  /usr/local/gromacs
 Working dir:  /home/gmeek/Foldamers/terphenyl_folding/o-terphenyl/monomer/run_2019-06-20/input_files
-Process ID:   23945
+Process ID:   1702
 Command line:
   gmx mdrun -nsteps 5000 -pforce 0.1 -v -deffnm em2
 
@@ -134,7 +134,7 @@ Input Parameters:
    comm-mode                      = Linear
    nstcomm                        = 100
    bd-fric                        = 0
-   ld-seed                        = 1722074539
+   ld-seed                        = -270705091
    emtol                          = 10
    emstep                         = 0.01
    niter                          = 20
@@ -309,7 +309,7 @@ Removing pbc first time
 
 Note that activating steepest-descent energy minimization via the integrator .mdp option and the command gmx mdrun may be available in a different form in a future version of GROMACS, e.g. gmx minimize and an .mdp option.
 Initiating Steepest Descents
-Started Steepest Descents on rank 0 Fri Jun 21 11:55:58 2019
+Started Steepest Descents on rank 0 Thu Jun 20 18:22:54 2019
 
 
 Steepest Descents:
@@ -1091,5 +1091,5 @@ Steepest Descents converged to Fmax < 10 in 105 steps
 Potential Energy  = -4.2180939e+00
 Maximum force     =  9.9332762e+00 on atom 21
 Norm of force     =  3.5327057e+00
-Finished mdrun on rank 0 Fri Jun 21 11:55:58 2019
+Finished mdrun on rank 0 Thu Jun 20 18:22:54 2019
 
