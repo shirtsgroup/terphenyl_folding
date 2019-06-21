@@ -12,10 +12,10 @@ import mdtraj as md
 
 # Begin user input
 polymer_name = "o-terphenyl"
-polymer_length = "monomer"
-polymer_abbreviation = ['M','O','N']
+polymer_length = "tetramer"
+polymer_abbreviation = ['T','E','T']
 polymer_code = ''.join(polymer_abbreviation)
-make_parameter_files = False
+make_parameter_files = True
 add_solvent = True
 run_minimization = True
 run_equilibration = True

@@ -1,10 +1,9 @@
 # In order to run as expected, this script requires that the system
 # contain an installed copy of GROMACS, available for reference
 # with the standard "gmx ..." syntax
-import shutil
-from shutil import copytree, copyfile
-from zipfile import ZipFile
-import subprocess, datetime
+from terphenyl_folding.src.simulation import *
+from terphenyl_folding.src.analysis import *
+import datetime
 import os, statistics
 import pymbar
 import matplotlib.pyplot as pyplot
@@ -12,104 +11,69 @@ import numpy as np
 import mdtraj as md
 
 # Begin user input
-fresh_run = True # Delete old files
 polymer_name = "o-terphenyl"
 polymer_length = "dimer"
 polymer_abbreviation = ['D','I','M']
-polymer_code = 'DIM'
-parameterize = False
-minimize = True
-equilibrate = True
-simulate = True
+polymer_code = ''.join(polymer_abbreviation)
+make_parameter_files = True
+add_solvent = True
+run_minimization = True
+run_equilibration = True
+run_simulation = True
+analyze_simulation_data = True
 # End user input
 
 date = str(datetime.datetime.now()).split()[0]
-run_directory = str(str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date))
+input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
+run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date)))
+pdb_file = str(str(input_directory)+"/"+str(polymer_length)+".pdb")
 
-if not os.path.exists(run_directory): 
-  os.mkdir(run_directory)
-
-if os.path.exists(str(str(run_directory)+'/input_files')):
-  if fresh_run:
-    shutil.rmtree(str(str(run_directory)+'/input_files'))
-    copytree(str(str(polymer_name)+'/'+str(polymer_length)+'/input_files'),str(str(run_directory)+'/input_files'))
-  else:
-    copytree(str(str(polymer_name)+'/'+str(polymer_length)+'/input_files'),str(str(run_directory)+'/input_files'))
-if not os.path.exists(str(str(run_directory)+'/input_files/gaff')):
-    copytree('gaff',str(str(run_directory)+'/input_files/gaff'))
+build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
 os.chdir(str(str(run_directory)+'/input_files'))
 
-if parameterize:
+if make_parameter_files:
 # Parameterize our polymer using 'antechamber', from AmberTools.
-#
-# We start with a PDB file:
-  pdb_file = str(str(polymer_length)+".pdb")
-  copyfile(str("../../../"+str(polymer_length)+"/input_files/"+pdb_file),pdb_file)
-# We parameterize the PDB structure using a BASH script written by Ben Coscia: "https://github.com/shirtsgroup/useful-scripts/blob/master/Paramaterization/GAFF/param.sh"
-#  print(os.getcwd())
-  copyfile("../../../../gaff/param.sh","param.sh")
-  copyfile("../../../../gaff/acpype.py","acpype.py")
-  copyfile("../../../../gaff/insertmol2charges.py","insertmol2charges.py")
-  copyfile("../../../../gaff/em.mdp","em.mdp")
-  copyfile("../../../../gaff/anneal.mdp","anneal.mdp")
-# Replace the variable keyword '$NAME' in param.sh with the name of the current polymer length
-  with open("param.sh", "rt") as fin:
-    with open("new_param.sh", "wt") as fout:
-        for line in fin:
-            fout.write(line.replace('$NAME', polymer_length).replace('$RES', polymer_code))
-  os.rename("new_param.sh","param.sh")
-# Place the residue name in the input PDB file residue name columns
-  with open(pdb_file, "rt") as fin:
-    with open(str("new_"+pdb_file), "wt") as fout:
-        for line in fin:
-            line_list = [char for char in line]
-            line_start = ''.join(line_list[1:6])
-            if line_start == 'HETATM' or line_start == 'ATOM  ':
-              line_list[18:20] = polymer_abbreviation
-              line = ''.join(line_list)
-            fout.write(line)
-  os.rename(str("new_"+pdb_file),pdb_file)
-  subprocess.run(["chmod","+x","param.sh"])
-  subprocess.run(["./param.sh",pdb_file])
-# Remove unnecessary sections from the GROMACS ".top" file
+  parameterize(polymer_length,polymer_code,pdb_file,run_directory)
 
-if minimize:
-# Setup an energy minimization of the initial structure guess
-  subprocess.run(["gmx","grompp","-f","em.mdp","-p","topol.top","-c","solvated.gro","-o","em"]) 
-# Run the energy minimization
-  subprocess.run(["gmx","mdrun","-v","-deffnm","em"])
-  subprocess.run(["gmx","trjconv","-f","em.trr","-o","em.pdb"])
-if equilibrate:
-# Setup an equilibration run with Berendsen barostat
-  subprocess.run(["gmx","grompp","-f","berendsen.mdp","-p","topol.top","-c","em.gro","-o","berendsen"])
-# Run the equilibration
-  subprocess.run(["gmx","mdrun","-v","-deffnm","berendsen"])
-  subprocess.run(["gmx","trjconv","-f","berendsen.trr","-o","berendsen.pdb"])
-  exit()
-if simulate:
-# Setup a Parrinello-Rahman pressure control simulation run
-  subprocess.run(["gmx","grompp","-f","npt.mdp","-p","topol.top","-c","berendsen.gro","-o","npt"])
-  
-# Compress large files
-files_list = []
-for path, subdirs, files in os.walk(str(str(run_directory)+'/input_files')):
-    for name in files:
-        filesList.append(os.path.join(path, name))
+if add_solvent:
+# Add solvent to a simulation box containing the system
+  solvate(input_pdb="em2.gro",solvent_density=0.6)
+exit()
 
-for file in filesList:
-    # Getting the size in a variable
-    fileSize = os.path.getsize(str(file))
+if run_minimization:
+# Minimize our initial structure
+  minimize()
 
-    # Print the files that meet the condition
-    if int(fileSize) >= int(1.0e8):
-      shutil.make_archive(str(file),"zip",file)
+if run_equilibration:
+# Run NPT equilibration of our minimized structure
+  equilibrate()
 
-print(subprocess.call(["find",".","-name","'*.zip'"]))
+if run_simulation:
+# Run a Parrinello-Rahman pressure control simulation run
+  simulate() 
+  compress_large_files(run_directory) 
+
+if analyze_simulation_data:
+# Define the paths for our simulation output files
+  gmx_simulation_energies = str(str(run_directory)+"/"+str(simulation)+".edr")
+  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+".xtc")
+# Read in simulation data
+  traj = read_trajectory(pdb_file,gmx_trajectory)
+  energies = read_energies(gmx_simulation_energies)
+# Get equilibrium frames, and data
+  equilibrium_frames = get_equilibrium_frames(energies)
+  energies = energies[equilibrium_frames]
+  traj = traj[equilibrium_frames]
+# Analyze trajectory to get internal coordinates of interest
+  torsion_definitions = get_torsion_definitions(pdb_file)
+
+if archive:
+  compress_large_files(run_directory)
 
 exit()
 
 # Read the energies
-trajectory_file = "test.xvg"
+trajectory_file = ".xvg"
 file_obj = open(trajectory_file,"r")
 lines = file_obj.readlines()
 file_obj.close()

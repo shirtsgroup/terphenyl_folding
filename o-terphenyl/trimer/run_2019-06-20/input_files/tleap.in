@@ -1,0 +1,8 @@
+source oldff/leaprc.ff99SB
+source leaprc.gaff
+TRI = loadmol2 trimer.mol2
+check TRI
+loadamberparams trimer.frcmod
+saveoff TRI TRI.lib
+saveamberparm TRI trimer.prmtop trimer.inpcrd
+quit
