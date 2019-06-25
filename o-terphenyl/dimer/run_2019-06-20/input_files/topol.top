@@ -2,7 +2,7 @@
 #include "gaff/gaff.itp"
 
 ;TMR Topology
-#include "TMR.itp"
+#include "DIM.top"
 
 ;TCM Topology
 #include "TCM.itp"
@@ -13,4 +13,4 @@ Simulation Box
 [ molecules ]
 ;Compounds     nmols
 DIM                1
-TCM              797
+TCM             3189

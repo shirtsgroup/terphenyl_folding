@@ -1,0 +1,8 @@
+source oldff/leaprc.ff99SB
+source leaprc.gaff
+TET = loadmol2 tetramer.mol2
+check TET
+loadamberparams tetramer.frcmod
+saveoff TET TET.lib
+saveamberparm TET tetramer.prmtop tetramer.inpcrd
+quit

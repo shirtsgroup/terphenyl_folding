@@ -15,7 +15,7 @@ polymer_name = "o-terphenyl"
 polymer_length = "trimer"
 polymer_abbreviation = ['T','R','I']
 polymer_code = ''.join(polymer_abbreviation)
-make_parameter_files = True
+make_parameter_files = False
 add_solvent = True
 run_minimization = True
 run_equilibration = True
@@ -25,7 +25,7 @@ analyze_simulation_data = True
 
 date = str(datetime.datetime.now()).split()[0]
 input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
-run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date)))
+run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_2019-06-20'))
 pdb_file = str(str(input_directory)+"/"+str(polymer_length)+".pdb")
 
 build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
@@ -37,16 +37,17 @@ if make_parameter_files:
 
 if add_solvent:
 # Add solvent to a simulation box containing the system
-  solvate(input_pdb="em2.gro",solvent_density=0.6)
+  solvate(input_pdb=str(str(polymer_code)+".gro"),solvent_density=0.6)
 exit()
 
 if run_minimization:
 # Minimize our initial structure
-  minimize()
+  minimized_structure_pdb = minimize(polymer_code)
 
 if run_equilibration:
 # Run NPT equilibration of our minimized structure
   equilibrate()
+exit()
 
 if run_simulation:
 # Run a Parrinello-Rahman pressure control simulation run
