@@ -1,8 +1,8 @@
 # In order to run as expected, this script requires that the system
 # contain an installed copy of GROMACS, available for reference
 # with the standard "gmx ..." syntax
-from terphenyl_folding.src.simulation import *
-from terphenyl_folding.src.analysis import *
+from terphenyl_folding.simulation import *
+from terphenyl_folding.analysis import *
 import datetime
 import os, statistics
 import pymbar
@@ -26,9 +26,11 @@ analyze_simulation_data = True
 date = str(datetime.datetime.now()).split()[0]
 input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
 run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date)))
-pdb_file = str(str(input_directory)+"/"+str(polymer_length)+".pdb")
+pdb_file = str(os.path.abspath('../terphenyl_folding/')+"/"+str(polymer_name)+"/"+str(polymer_length)+"/input_files/"+str(polymer_length)+".pdb")
 
-build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
+#build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
+if not os.path.exists(str(str(run_directory)+"/input_files")):
+  os.makedirs(str(str(run_directory)+"/input_files"))
 os.chdir(str(str(run_directory)+'/input_files'))
 
 if make_parameter_files:

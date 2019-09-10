@@ -1,8 +1,8 @@
 # In order to run as expected, this script requires that the system
 # contain an installed copy of GROMACS, available for reference
 # with the standard "gmx ..." syntax
-from terphenyl_folding.src.simulation import *
-from terphenyl_folding.src.analysis import *
+from terphenyl_folding.simulation import *
+from terphenyl_folding.analysis import *
 import datetime
 import os, statistics
 import pymbar

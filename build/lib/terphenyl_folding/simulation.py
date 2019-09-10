@@ -62,7 +62,7 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         # Parameterize our polymer using 'antechamber', from AmberTools.
 #
         # We parameterize the PDB structure using the param.sh BASH script written by Ben Coscia as a template: "https://github.com/shirtsgroup/useful-scripts/blob/master/Paramaterization/GAFF/param.sh"
-        terphenyl_top = os.path.abspath(os.path.abspath('../')
+        terphenyl_top = str(os.path.abspath(os.path.dirname(__file__)).split('/src')[0])
         gaff_directory = str(terphenyl_top+"/setup_files/gaff")
         input_files = str(run_directory.split('/run')[0]+"/input_files")
         # Construct topology file
