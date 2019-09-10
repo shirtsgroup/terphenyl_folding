@@ -1,0 +1,36 @@
+<ForceField>
+ <AtomTypes>
+  <Type name="TCM-C" class="C" element="C" mass="12.000000"/>
+  <Type name="TCM-H" class="H" element="H" mass="1.007947"/>
+  <Type name="TCM-Cl" class="Cl" element="Cl" mass="35.500000"/>
+ </AtomTypes>
+ <Residues>
+  <Residue name="TCM">
+   <Atom name="C" type="TCM-C"/>
+   <Atom name="H" type="TCM-H"/>
+   <Atom name="Cl1" type="TCM-Cl"/>
+   <Atom name="Cl2" type="TCM-Cl"/>
+   <Atom name="Cl3" type="TCM-Cl"/>
+   <Bond atomName1="C" atomName2="H"/>
+   <Bond atomName1="C" atomName2="Cl1"/>
+   <Bond atomName1="C" atomName2="Cl2"/>
+   <Bond atomName1="C" atomName2="Cl3"/>
+  </Residue>
+ </Residues>
+ <HarmonicBondForce>
+  <Bond class1="C" class2="H" length="0.1093" k="281080.0"/>
+  <Bond class1="C" class2="Cl" length="0.17860" k="233470.0"/>
+  <Bond class1="C" class2="Cl" length="0.17860" k="233470.0"/>
+  <Bond class1="C" class2="Cl" length="0.17860" k="233470.0"/>
+ </HarmonicBondForce>
+ <HarmonicAngleForce>
+  <Angle class1="H" class2="C" class3="Cl" angle="1.878846" k="337.23"/>
+  <Angle class1="Cl" class2="C" class3="Cl" angle="1.937839" k="453.55"/>
+ </HarmonicAngleForce>
+ <NonbondedForce coulomb14scale="0.833333" lj14scale="0.5">
+  <Atom type="TCM-C" charge="0.5609" sigma="0.341" epsilon="0.573208"/>
+  <Atom type="TCM-Cl" charge="-0.1686" sigma="0.345" epsilon="1.156"/>
+  <Atom type="TCM-H" charge="-0.0551" sigma="0.281" epsilon="0.08368"/>
+ </NonbondedForce>
+</ForceField>
+

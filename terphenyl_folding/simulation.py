@@ -55,6 +55,8 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         if not os.path.exists(param_directory):
           os.mkdir(param_directory)
         os.chdir(param_directory)
+        param_pdb = str(str(param_directory)+"/"+str(pdb_file.split('/run/input_files/')[1]))
+        copyfile(pdb_file,param_pdb)
 
         # Parameterize our polymer using 'antechamber', from AmberTools.
 #
@@ -69,7 +71,7 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         replace(topol_new,'$TERPHENYL_TOP',terphenyl_top)
         replace(topol_new,'$RUN_DIRECTORY',param_directory)
         replace(topol_new,'$POLYMER_CODE  ',str("{:<15}".format(polymer_code)))
-        replace(topol_new,'$POLYMER_CODE ',str("{:<4}".format(polymer_code)))
+        replace(topol_new,'$POLYMER_CODE ',str("{:<3}".format(polymer_code)))
         copyfile(str(gaff_directory+"/acpype.py"),str(param_directory+"/acpype.py"))
         copyfile(str(gaff_directory+"/insertmol2charges.py"),str(param_directory+"/insertmol2charges.py"))
 #        copyfile(str(str(gaff_directory)+"/anneal.mdp"),str(run_directory+"/anneal.mdp"))
@@ -77,22 +79,24 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         copyfile(str(gaff_directory+"/param.sh"),str(param_directory+"/param.sh"))
         replace(str(param_directory+"/param.sh"),'$NAME',polymer_length)
         replace(str(param_directory+"/param.sh"),'$RES',polymer_code)
-        # Place the residue name in the input PDB file residue name columns
-        print(pdb_file)
-        exit()
+       # Place the residue name in the input PDB file residue name columns
         with open(pdb_file, "rt") as fin:
+
           new_pdb_file = str(pdb_file+"temp")
           with open(new_pdb_file, "wt") as fout:
               for line in fin:
                   line_list = [char for char in line]
                   line_start = ''.join(line_list[0:6])
+                  residue_code = ''.join(line_list[22:25])
+                  if residue_code == '   ':
+                    line_list[22:25] = polymer_code
                   if line_start == 'HETATM' or line_start == 'ATOM  ':
-                    line_list[18:20] = polymer_code
-                    line = ''.join(line_list)
+                    del line_list[26]
+                  line = ''.join(line_list)
                   fout.write(line)
-        os.rename(new_pdb_file,pdb_file)
+        os.rename(new_pdb_file,param_pdb)
         subprocess.run(["chmod","+x","param.sh"])
-        subprocess.run(["./param.sh",pdb_file])
+        subprocess.run(["./param.sh"])
        
         return
 

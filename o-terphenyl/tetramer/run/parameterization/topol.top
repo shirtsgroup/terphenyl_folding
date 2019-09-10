@@ -1,0 +1,16 @@
+;Forcefield
+#include "/home/gmeek/Foldamers/terphenyl_folding/gaff/gaff.itp"
+
+;TET Topology
+#include "/home/gmeek/Foldamers/terphenyl_folding/o-terphenyl/tetramer/run/parameterization/$POLYMER_CODE.itp"
+
+;TCM Topology
+#include "/home/gmeek/Foldamers/terphenyl_folding/setup_files/TCM.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+TET                1
+TCM              $NUM_SOLVENT_MOLECULES

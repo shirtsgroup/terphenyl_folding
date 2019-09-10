@@ -5,6 +5,7 @@ from terphenyl_folding.src.simulation import *
 from terphenyl_folding.src.analysis import *
 import datetime
 import os, statistics
+from shutil import copytree, copyfile
 import pymbar
 import matplotlib.pyplot as pyplot
 import numpy as np
@@ -25,28 +26,32 @@ analyze_simulation_data = True
 
 date = str(datetime.datetime.now()).split()[0]
 input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
-run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date)))
+run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run'))
 pdb_file = str(str(input_directory)+"/"+str(polymer_length)+".pdb")
 
 build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
+if not os.path.exists(str(str(run_directory)+'/input_files')):
+  os.mkdir(str(str(run_directory)+'/input_files'))
 os.chdir(str(str(run_directory)+'/input_files'))
 
 if make_parameter_files:
 # Parameterize our polymer using 'antechamber', from AmberTools.
-  parameterize(polymer_length,polymer_code,pdb_file,run_directory)
-
+  run_pdb_file = str(str(run_directory)+"/input_files/"+str(polymer_length)+".pdb")
+  copyfile(pdb_file,run_pdb_file)
+  parameterize(polymer_length,polymer_code,run_pdb_file,run_directory)
+exit()
 if add_solvent:
 # Add solvent to a simulation box containing the system
-  solvate(input_pdb="em2.gro",solvent_density=0.6)
-exit()
+  solvate(polymer_code,input_pdb=str(str(polymer_code)+".gro"),solvent_density=0.6)
 
 if run_minimization:
 # Minimize our initial structure
-  minimize()
+  minimized_structure_pdb = minimize(polymer_code)
 
 if run_equilibration:
 # Run NPT equilibration of our minimized structure
   equilibrate()
+exit()
 
 if run_simulation:
 # Run a Parrinello-Rahman pressure control simulation run
