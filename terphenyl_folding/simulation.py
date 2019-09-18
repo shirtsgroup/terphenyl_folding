@@ -13,6 +13,8 @@ import mdtraj as md
 import terphenyl_folding
 
 def replace(file,original_text,replacement_text):
+        """
+        """
         with open(file, "rt") as fin:
           with open(str(file+"temp"), "wt") as fout:
             for line in fin:
@@ -22,10 +24,6 @@ def replace(file,original_text,replacement_text):
 
 def build_directories(polymer_name,polymer_length,run_directory,fresh_run=False):
         """
-
-        Parameters
-        ----------
-
         """
         if not os.path.exists(run_directory):
           os.makedirs(run_directory)
@@ -34,50 +32,45 @@ def build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
             shutil.rmtree(run_directory)
             os.makedirs(run_directory)
 
-        terphenyl_top = str(str(terphenyl_folding.__file__).split('/terphenyl_folding')[0]+str("/terphenyl_folding"))
-        input_files = str(str(terphenyl_top)+'/terphenyl_folding/'+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
+        terphenyl_top = os.path.abspath('../../')
+        input_files = str(str(terphenyl_top)+'/input_files/'+str(polymer_name)+'/'+str(polymer_length))
 
-        pdb_file = str(str(input_files)+'/'+str(polymer_length)+".pdb")
+        pdb_file = str(str(input_files)+'/'+str(polymer_length)+'.pdb')
         solvent_pdb_file = str(str(input_files)+"/solvent.pdb")
-        run_pdb_file = str(str(terphenyl_top)+"/"+str(polymer_name)+"/"+str(polymer_length)+"/run/"+str(polymer_length)+".pdb")
-        run_solvent_file = str(str(terphenyl_top)+"/"+str(polymer_name)+"/"+str(polymer_length)+"/run/solvent.pdb")
+        run_pdb_file = str(str(run_directory)+"/"+str(polymer_length)+".pdb")
+        run_solvent_file = str(str(run_directory)+"/solvent.pdb")
         copyfile(pdb_file,run_pdb_file)
         copyfile(solvent_pdb_file,run_solvent_file)
         return
 
 def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
         """
-
-        Parameters
-        ----------
-
         """
         param_directory = str(run_directory+"/parameterization")
         if not os.path.exists(param_directory):
           os.mkdir(param_directory)
-        os.chdir(param_directory)
-        param_pdb = str(str(param_directory)+"/"+str(pdb_file.split('/input_files/')[1]))
+        param_pdb = str(str(param_directory)+"/"+str(pdb_file.split('/input_files/o-terphenyl/monomer/')[1]))
         copyfile(pdb_file,param_pdb)
 
         # Parameterize our polymer using 'antechamber', from AmberTools.
 #
         # We parameterize the PDB structure using the param.sh BASH script written by Ben Coscia as a template: "https://github.com/shirtsgroup/useful-scripts/blob/master/Paramaterization/GAFF/param.sh"
-        terphenyl_top = os.path.abspath(os.path.abspath('../')
-        gaff_directory = str(terphenyl_top+"/setup_files/gaff")
+        terphenyl_top = os.path.abspath('../../')
+        gaff_directory = str(str(terphenyl_top)+"/setup_files/gaff")
         input_files = str(run_directory.split('/run')[0]+"/input_files")
         # Construct topology file
-        topol = str(terphenyl_top+"/setup_files/topol.top")
-        topol_new = str(param_directory+"/topol.top")
+        topol = str(str(terphenyl_top)+"/setup_files/topol.top")
+        topol_new = str(str(param_directory)+"/topol.top")
         copyfile(topol,topol_new)
         replace(topol_new,'$TERPHENYL_TOP',terphenyl_top)
         replace(topol_new,'$RUN_DIRECTORY',param_directory)
         replace(topol_new,'$POLYMER_CODE  ',str("{:<15}".format(polymer_code)))
         replace(topol_new,'$POLYMER_CODE ',str("{:<3}".format(polymer_code)))
-        copyfile(str(gaff_directory+"/acpype.py"),str(param_directory+"/acpype.py"))
-        copyfile(str(gaff_directory+"/insertmol2charges.py"),str(param_directory+"/insertmol2charges.py"))
+        copyfile(str(str(gaff_directory)+"/acpype.py"),str(str(param_directory)+"/acpype.py"))
+        copyfile(str(str(gaff_directory)+"/insertmol2charges.py"),str(str(param_directory)+"/insertmol2charges.py"))
 #        copyfile(str(str(gaff_directory)+"/anneal.mdp"),str(run_directory+"/anneal.mdp"))
         # Replace the variable keyword '$NAME' in param.sh with the name of the current polymer length
-        copyfile(str(gaff_directory+"/param.sh"),str(param_directory+"/param.sh"))
+        copyfile(str(str(gaff_directory)+"/param.sh"),str(str(param_directory)+"/param.sh"))
         replace(str(param_directory+"/param.sh"),'$NAME',polymer_length)
         replace(str(param_directory+"/param.sh"),'$RES',polymer_code)
        # Place the residue name in the input PDB file residue name columns
@@ -90,50 +83,39 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
                   line_start = ''.join(line_list[0:6])
                   residue_code = ''.join(line_list[22:25])
                   if residue_code == '   ':
-                    line_list[22:25] = polymer_code
+                    line_list[21:24] = polymer_code
                   if line_start == 'HETATM' or line_start == 'ATOM  ':
                     del line_list[26]
                   line = ''.join(line_list)
                   fout.write(line)
         os.rename(new_pdb_file,param_pdb)
-        subprocess.run(["chmod","+x","param.sh"])
-        subprocess.run(["./param.sh"])
+        subprocess.run(["chmod","+x",str(str(param_directory)+"/param.sh")])
+        #os.chdir(param_directory)
+        subprocess.run([str(str(param_directory)+"/param.sh")])
        
         return
 
 def minimize(polymer_code):
         """
-
-        Parameters
-        ----------
-
         """
         # Setup an energy minimization of the initial structure guess
         subprocess.run(["gmx","grompp","-f","em.mdp","-p","topol.top","-c","solvated.gro","-o","em3"])
-        exit()
         # Run the energy minimization
         subprocess.run(["gmx","mdrun","-v","-deffnm","em3"])
         subprocess.run(["gmx","trjconv","-f","em3.trr","-s","solvated.gro","-o","em3.pdb"])
         return("em3.pdb")
 
-def solvate(polymer_code,input_pdb,solvent_density=0.5):
+def solvate(polymer_name,polymer_length,polymer_code,input_pdb,run_directory,solvent_density=0.5):
         """
-
-        Parameters
-        ----------
-
         """
         # Build a simulation box and fill it with solvent
-        subprocess.run(["gmx","solvate","-cp",input_pdb,"-cs","solvent.pdb","-p",str(str(polymer_code)+".top"),"-o","solvated.gro"])
+        topology = str(os.path.abspath('../../')+"/input_files/"+str(polymer_name)+"/"+str(polymer_length)+"/topol.top")
+        subprocess.run(["gmx","solvate","-cp",input_pdb,"-cs",str(str(run_directory)+"/solvent.pdb"),"-p",topology,"-o",str(str(run_directory)+"/solvated.gro")])
 
         return
 
 def equilibrate():
         """
-
-        Parameters
-        ----------
-
         """
         # Setup an equilibration run with Berendsen barostat
         subprocess.run(["gmx","grompp","-f","berendsen.mdp","-p","topol.top","-c","em3.gro","-o","berendsen"])
@@ -145,10 +127,6 @@ def equilibrate():
 
 def simulate():
         """
-
-        Parameters
-        ----------
-
         """
         subprocess.run(["gmx","grompp","-f","npt.mdp","-p","topol.top","-c","berendsen.gro","-o","npt"])
         subprocess.run(["gmx","mdrun","-v","-deffnm","npt"])
@@ -157,10 +135,6 @@ def simulate():
 
 def compress_large_files(directory,size_threshold=1.0e8):
         """
-
-        Parameters
-        ----------
-
         """
         filesList = []
         for path, subdirs, files in os.walk(directory):

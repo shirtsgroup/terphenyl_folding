@@ -9,9 +9,9 @@
 set -e # exit upon error
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"  # location of this script
 
-name='$NAME' # name of molecule. This name will carry through to output
+name='monomer' # name of molecule. This name will carry through to output
 nc=0  # net charge
-res='$RES' # name of residue being made, NOTE: This must match the residue in the .pdb file or you will get errors
+res='MON' # name of residue being made, NOTE: This must match the residue in the .pdb file or you will get errors
 anneal='no'  # change to 'yes' if you want a thermal annealing process carried out after energy minimization
 input_path="${SCRIPT_DIR}"  # location of em.mdp and anneal.mdp files
 
@@ -28,7 +28,7 @@ done
 # atomtyping and initial charge assigment with antechamber and tleap roughly follow steps descrbed here:
 # http://ambermd.org/tutorials/basic/tutorial4b/
 
-antechamber -i ${SCRIPT_DIR}/${name}.pdb -fi pdb -o ${SCRIPT_DIR}/${name}.mol2 -fo mol2 -c bcc -s 2 -nc ${nc} -pl 15  # The .pdb must have connectivity info!
+antechamber -i ${run_path}/${name}.pdb -fi pdb -o ${run_path}/${name}.mol2 -fo mol2 -c bcc -s 2 -nc ${nc} -pl 15  # The .pdb must have connectivity info!
 # -c bcc tells antechamber to use AM1-BCC charge model
 # -s flag just defines verbosity of output
 parmchk -i ${name}.mol2 -f mol2 -o ${name}.frcmod
@@ -36,11 +36,11 @@ parmchk -i ${name}.mol2 -f mol2 -o ${name}.frcmod
 # Create input to tleap
 echo "source oldff/leaprc.ff99SB" > tleap.in
 echo "source leaprc.gaff" >> tleap.in  # make sure tleap knows about GAFF forcefield
-echo "${res} = loadmol2 ${name}.mol2" >> tleap.in  # load monomer
+echo "${res} = loadmol2 ${run_path}/${name}.mol2" >> tleap.in  # load monomer
 echo "check ${res}" >> tleap.in  # checks for missing parameters
-echo "loadamberparams ${name}.frcmod" >> tleap.in  # tell tLeap what to do with missing parameters
+echo "loadamberparams ${run_path}/${name}.frcmod" >> tleap.in  # tell tLeap what to do with missing parameters
 echo "saveoff ${res} ${res}.lib" >> tleap.in  # create a library file for the new residue
-echo "saveamberparm ${res} ${name}.prmtop ${name}.inpcrd" >> tleap.in  # make topology files
+echo "saveamberparm ${res} ${run_path}/${name}.prmtop ${run_path}/${name}.inpcrd" >> tleap.in  # make topology files
 echo "quit" >> tleap.in  # exit out of tleap
 
 tleap -f tleap.in  # run the previous block in tleap
@@ -49,13 +49,13 @@ tleap -f tleap.in  # run the previous block in tleap
 #sed -i -e "s/${res: -3}/${res}/g" ${name}.inpcrd
 DIR=${input_path}
 
-python acpype.py -p ${name}.prmtop -x ${name}.inpcrd
+python acpype.py -p ${run_path}/${name}.prmtop -x ${run_path}/${name}.inpcrd
 
 # Rename. I prefer to get rid of the GMX part. Copy them though so we have backup
-cp MOL_GMX.gro ${res}.gro
-cp MOL_GMX.top ${res}.top
+cp MOL_GMX.gro ${run_path}/${res}.gro
+cp MOL_GMX.top ${run_path}/${res}.top
 
-gmx editconf -f ${res}.gro -o box.gro -c -d 3 -bt cubic  # create a cubic box with lots of space for the monomer
+gmx editconf -f ${run_path}/${res}.gro -o ${run_path}/box.gro -c -d 3 -bt cubic  # create a cubic box with lots of space for the monomer
 gmx grompp -f em.mdp -p ${res}.top -c box.gro -o em1  # create atomic level input file
 gmx mdrun -nsteps 5000 -pforce 0.1 -v -deffnm em1  # run energy minimization
 gmx editconf -f em1.gro -o ${res}_new.pdb  # will need this for molcharge later

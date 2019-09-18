@@ -7,37 +7,63 @@ import datetime
 import os, statistics
 import pymbar
 import matplotlib.pyplot as pyplot
-import numpy as np
 import mdtraj as md
+import numpy as np
+from statistics import mean
+from simtk import unit
+from simtk.openmm.app.pdbfile import PDBFile
+from simtk.openmm.app.modeller import Modeller
+from foldamers.cg_model.cgmodel import CGModel
+from foldamers.parameters.reweight import *
+from foldamers.parameters.secondary_structure import *
+from foldamers.thermo.calc import *
+from cg_openmm.simulation.rep_exch import *
+
+pdb = PDBFile("test.pdb")
+modeller = Modeller(pdb.topology,pdb.positions)
+topology = pdb.topology
+positions = pdb.positions
+forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
+system = forcefield.createSystem(modeller.topology, nonbondedMethod=PME,nonbondedCutoff=3*unit.nanometer, constraints=HBonds)
+integrator = LangevinIntegrator(300*kelvin, 1/picosecond, 0.002*picoseconds)
+simulation = Simulation(pdb.topology, system, integrator)
+simulation.context.setPositions(modeller.positions)
+simulation.minimizeEnergy()
+simulation.reporters.append(PDBReporter('output.pdb', 1000))
+simulation.reporters.append(StateDataReporter(stdout, 1000, step=True,potentialEnergy=True, temperature=True))
+simulation.step(10000)
+exit()
 
 # Begin user input
 polymer_name = "o-terphenyl"
-polymer_length = "tetramer"
-polymer_abbreviation = ['T','E','T']
+polymer_length = "monomer"
+polymer_abbreviation = ['M','O','N']
 polymer_code = ''.join(polymer_abbreviation)
+solvent_density = 0.6
+fresh_run = True
 make_parameter_files = True
 add_solvent = True
 run_minimization = True
 run_equilibration = True
 run_simulation = True
 analyze_simulation_data = True
+pdb_file = str(os.path.abspath('../../')+'/input_files/'+str(polymer_name)+'/'+str(polymer_length)+'/'+str(polymer_length)+'.pdb')
 # End user input
 
 date = str(datetime.datetime.now()).split()[0]
-input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
-run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date)))
-pdb_file = str(os.path.abspath('../terphenyl_folding/')+"/"+str(polymer_name)+"/"+str(polymer_length)+"/input_files/"+str(polymer_length)+".pdb")
+run_directory = str(os.path.abspath('../../')+'/data/'+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date))
 
-build_directories(polymer_name,polymer_length,run_directory,fresh_run=False)
+build_directories(polymer_name,polymer_length,run_directory,fresh_run=fresh_run)
 
 if make_parameter_files:
 # Parameterize our polymer using 'antechamber', from AmberTools.
   parameterize(polymer_length,polymer_code,pdb_file,run_directory)
 
+exit()
+
 if add_solvent:
 # Add solvent to a simulation box containing the system
-  solvate(input_pdb="em2.gro",solvent_density=0.6)
-exit()
+  solvate(polymer_name,polymer_length,polymer_code,str(str(run_directory)+'/em2.gro'),run_directory,solvent_density=solvent_density)
 
 if run_minimization:
 # Minimize our initial structure
@@ -54,8 +80,8 @@ if run_simulation:
 
 if analyze_simulation_data:
 # Define the paths for our simulation output files
-  gmx_simulation_energies = str(str(run_directory)+"/"+str(simulation)+".edr")
-  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+".xtc")
+  gmx_simulation_energies = str(str(run_directory)+'/'+str(simulation)+'.edr')
+  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+'.xtc')
 # Read in simulation data
   traj = read_trajectory(pdb_file,gmx_trajectory)
   energies = read_energies(gmx_simulation_energies)

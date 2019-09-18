@@ -15,37 +15,39 @@ polymer_name = "o-terphenyl"
 polymer_length = "monomer"
 polymer_abbreviation = ['M','O','N']
 polymer_code = ''.join(polymer_abbreviation)
+solvent_density = 0.6
+fresh_run = True
 make_parameter_files = True
 add_solvent = True
 run_minimization = True
 run_equilibration = True
 run_simulation = True
 analyze_simulation_data = True
+pdb_file = str(os.path.abspath('../../')+'/input_files/'+str(polymer_name)+'/'+str(polymer_length)+'/'+str(polymer_length)+'.pdb')
 # End user input
 
 date = str(datetime.datetime.now()).split()[0]
-input_directory = str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/input_files')
-run_directory = str(str(str(os.path.abspath(os.path.dirname(__file__)))+"/"+str(polymer_name)+'/'+str(polymer_length)+'/run'))
-pdb_file = str(str(run_directory)+"/"+str(polymer_length)+".pdb")
+run_directory = str(os.path.abspath('../../')+'/data/'+str(polymer_name)+'/'+str(polymer_length)+'/run_'+str(date))
 
-build_directories(polymer_name,polymer_length,run_directory,fresh_run=True)
+build_directories(polymer_name,polymer_length,run_directory,fresh_run=fresh_run)
 
 if make_parameter_files:
 # Parameterize our polymer using 'antechamber', from AmberTools.
   parameterize(polymer_length,polymer_code,pdb_file,run_directory)
+
 exit()
+
 if add_solvent:
 # Add solvent to a simulation box containing the system
-  solvate(input_pdb=str(str(polymer_code)+".gro"),solvent_density=0.6)
+  solvate(polymer_name,polymer_length,polymer_code,str(str(run_directory)+'/em2.gro'),run_directory,solvent_density=solvent_density)
 
 if run_minimization:
 # Minimize our initial structure
-  minimized_structure_pdb = minimize(polymer_code)
+  minimize()
 
 if run_equilibration:
 # Run NPT equilibration of our minimized structure
   equilibrate()
-exit()
 
 if run_simulation:
 # Run a Parrinello-Rahman pressure control simulation run
@@ -54,8 +56,8 @@ if run_simulation:
 
 if analyze_simulation_data:
 # Define the paths for our simulation output files
-  gmx_simulation_energies = str(str(run_directory)+"/"+str(simulation)+".edr")
-  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+".xtc")
+  gmx_simulation_energies = str(str(run_directory)+'/'+str(simulation)+'.edr')
+  gmx_trajectory = str(str(run_directory)+"/"+str(simulation)+'.xtc')
 # Read in simulation data
   traj = read_trajectory(pdb_file,gmx_trajectory)
   energies = read_energies(gmx_simulation_energies)
