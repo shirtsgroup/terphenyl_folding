@@ -81,11 +81,11 @@ def parameterize(polymer_length,polymer_code,pdb_file,run_directory):
               for line in fin:
                   line_list = [char for char in line]
                   line_start = ''.join(line_list[0:6])
-                  residue_code = ''.join(line_list[22:25])
-                  if residue_code == '   ':
-                    line_list[21:24] = polymer_code
+                  residue_code = ''.join(line_list[17:20])
                   if line_start == 'HETATM' or line_start == 'ATOM  ':
-                    del line_list[26]
+                   if residue_code == '   ':
+                    line_list[17:20] = str("{:<3}".format(polymer_code))
+                   #del line_list[29]
                   line = ''.join(line_list)
                   fout.write(line)
         os.rename(new_pdb_file,param_pdb)
