@@ -1,0 +1,16 @@
+;Forcefield
+#include "$TERPHENYL_TOP/gaff/gaff.itp"
+
+;$POLYMER_CODE Topology
+#include "$RUN_DIRECTORY/$POLYMER_CODE.itp"
+
+;TCM Topology
+#include "$TERPHENYL_TOP/setup_files/TCM.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+$POLYMER_CODE      1
+TCM              $NUM_SOLVENT_MOLECULES

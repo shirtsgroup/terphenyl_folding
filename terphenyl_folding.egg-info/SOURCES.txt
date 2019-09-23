@@ -1,0 +1,10 @@
+README.md
+setup.py
+terphenyl_folding/__init__.py
+terphenyl_folding/analysis.py
+terphenyl_folding/simulation.py
+terphenyl_folding.egg-info/PKG-INFO
+terphenyl_folding.egg-info/SOURCES.txt
+terphenyl_folding.egg-info/dependency_links.txt
+terphenyl_folding.egg-info/requires.txt
+terphenyl_folding.egg-info/top_level.txt

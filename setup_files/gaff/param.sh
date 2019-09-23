@@ -28,10 +28,10 @@ done
 # atomtyping and initial charge assigment with antechamber and tleap roughly follow steps descrbed here:
 # http://ambermd.org/tutorials/basic/tutorial4b/
 
-antechamber -i ${SCRIPT_DIR}/${name}.pdb -fi pdb -o ${SCRIPT_DIR}/${name}.mol2 -fo mol2 -c bcc -s 2 -nc ${nc} -pl 15  # The .pdb must have connectivity info!
+antechamber -i ${name}.pdb -fi pdb -o ${name}.mol2 -fo mol2 -c bcc -s 2 -nc ${nc} -pl 15  # The .pdb must have connectivity info!
 # -c bcc tells antechamber to use AM1-BCC charge model
 # -s flag just defines verbosity of output
-parmchk -i ${name}.mol2 -f mol2 -o ${name}.frcmod
+parmchk2 -i ${name}.mol2 -f mol2 -o ${name}.frcmod
 
 # Create input to tleap
 echo "source oldff/leaprc.ff99SB" > tleap.in
@@ -52,8 +52,8 @@ DIR=${input_path}
 python acpype.py -p ${name}.prmtop -x ${name}.inpcrd
 
 # Rename. I prefer to get rid of the GMX part. Copy them though so we have backup
-cp MOL_GMX.gro ${res}.gro
-cp MOL_GMX.top ${res}.top
+cp ${res}_GMX.gro ${res}.gro
+cp ${res}_GMX.top ${res}.top
 
 gmx editconf -f ${res}.gro -o box.gro -c -d 3 -bt cubic  # create a cubic box with lots of space for the monomer
 gmx grompp -f em.mdp -p ${res}.top -c box.gro -o em1  # create atomic level input file
