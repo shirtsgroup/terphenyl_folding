@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2019.4.18)  22 SEP 2019 14:54
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2019.4.18)  25 SEP 2019 13:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1083,12 +1083,12 @@ File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <12> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 100.
 
-Underfull \hbox (badness 10000) in paragraph at lines 100--100
+Underfull \hbox (badness 10000) in paragraph at lines 106--106
 []\T1/ptm/m/it/12 polymer_name\T1/ptm/m/n/12 , \T1/ptm/m/it/12 poly-mer_length\
 T1/ptm/m/n/12 ,
  []
 
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 104.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 110.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
@@ -1098,92 +1098,116 @@ LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <12> not available
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 162.
+less on input line 164.
 
 [2
 
-] [3]
+]
+Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[]\T1/ptm/m/it/12 param_directory\T1/ptm/m/n/12 , \T1/ptm/m/it/12 pdb_file\T1/p
+tm/m/n/12 , \T1/ptm/m/it/12 topol-ogy_file\T1/ptm/m/n/12 , \T1/ptm/m/it/12 poly
+-
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 281--281
+[]\T1/ptm/m/it/12 solvent_file\T1/ptm/m/n/12 ,
+ []
+
+[4] [5]
 Chapter 2.
 
-Underfull \hbox (badness 10000) in paragraph at lines 239--239
+Underfull \hbox (badness 10000) in paragraph at lines 380--380
 []\T1/ptm/m/it/12 structure\T1/ptm/m/n/12 , \T1/ptm/m/it/12 poly-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 239--239
+Underfull \hbox (badness 10000) in paragraph at lines 380--380
 \T1/ptm/m/it/12 mer_name\T1/ptm/m/n/12 , \T1/ptm/m/it/12 poly-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 263--263
+Underfull \hbox (badness 10000) in paragraph at lines 404--404
 []\T1/ptm/m/it/12 structure\T1/ptm/m/n/12 , \T1/ptm/m/it/12 poly-mer_name\T1/pt
 m/m/n/12 , \T1/ptm/m/it/12 poly-
  []
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 285.
+less on input line 425.
 
-[4
+[6
 
-]
+] [7]
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 292.
+less on input line 439.
 
-[5
+[8
 
 
 
 ] (./terphenyl.ind
-Underfull \hbox (badness 10000) in paragraph at lines 16--17
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+[]\T1/pcr/m/n/12 calculate_solvent_density() \T1/ptm/m/n/12 (\T1/ptm/m/it/12 in
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 18--19
 []\T1/pcr/m/n/12 compress_large_files() \T1/ptm/m/n/12 (\T1/ptm/m/it/12 in mod-
 ule
  []
 
 
-Overfull \hbox (36.52238pt too wide) in paragraph at lines 25--27
+Overfull \hbox (36.52238pt too wide) in paragraph at lines 29--31
 []\T1/pcr/m/n/12 get_internal_coordinate_definitions()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 27--28
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
+[]\T1/pcr/m/n/12 get_num_solvent_molecules() \T1/ptm/m/n/12 (\T1/ptm/m/it/12 in
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--33
 []\T1/pcr/m/n/12 get_phenyl_carbon_indices() \T1/ptm/m/n/12 (\T1/ptm/m/it/12 in
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 28--29
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
 []\T1/pcr/m/n/12 get_phenyl_centers_of_mass() \T1/ptm/m/n/12 (\T1/ptm/m/it/12 i
 n
  []
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 49.
+less on input line 58.
 
-[6
+[9
 
 
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 296.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 296.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 443.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 443.
  (./terphenyl.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 296.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 296.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 443.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 443.
 Package rerunfilecheck Info: File `terphenyl.out' has not changed.
-(rerunfilecheck)             Checksum: C92C7CBE7E91854F948CFF3B18B7896C;670.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 296.
+(rerunfilecheck)             Checksum: 730E4792F188D2E3E590FF69AC640038;670.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 443.
  ) 
 Here is how much of TeX's memory you used:
- 13423 strings out of 495028
- 186408 string characters out of 6181497
- 268677 words of memory out of 5000000
- 16315 multiletter control sequences out of 15000+600000
+ 13444 strings out of 495028
+ 186923 string characters out of 6181497
+ 271232 words of memory out of 5000000
+ 16324 multiletter control sequences out of 15000+600000
  44178 words of font info for 63 fonts, out of 8000000 for 9000
  15 hyphenation exceptions out of 8191
- 37i,11n,45p,379b,486s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,12n,45p,528b,599s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
@@ -1193,10 +1217,10 @@ uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvbo8a.pfb>
 texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /urw/times/utmri8a.pfb>
-Output written on terphenyl.pdf (8 pages, 102985 bytes).
+Output written on terphenyl.pdf (11 pages, 110920 bytes).
 PDF statistics:
- 153 PDF objects out of 1000 (max. 8388607)
- 127 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
+ 199 PDF objects out of 1000 (max. 8388607)
+ 170 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
  53 words of extra memory for PDF output out of 10000 (max. 10000000)
 

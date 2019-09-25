@@ -71,7 +71,7 @@
 
 
 \title{Terphenyl folding Documentation}
-\date{Sep 22, 2019}
+\date{Sep 25, 2019}
 \release{0.0}
 \author{Garrett A. Meek\\Theodore L. Fobe\\Benjamin J. Coscia\\ \\Research group of Professor Michael R. Shirts\\ \\Dept. of Chemical and Biological Engineering\\University of Colorado Boulder}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -94,7 +94,13 @@ This documentation is generated automatically using Sphinx, which reads all docs
 \label{\detokenize{simulation:terphenyl-folding-simulation-utilities}}\label{\detokenize{simulation::doc}}
 Shown below are tools that allow simulation of terphenyl oligomers.
 
-\phantomsection\label{\detokenize{simulation:module-simulation}}\index{simulation (module)@\spxentry{simulation}\spxextra{module}}\index{build\_directories() (in module simulation)@\spxentry{build\_directories()}\spxextra{in module simulation}}
+\phantomsection\label{\detokenize{simulation:module-simulation}}\index{simulation (module)@\spxentry{simulation}\spxextra{module}}\index{adjust\_solvent\_density() (in module simulation)@\spxentry{adjust\_solvent\_density()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.adjust_solvent_density}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{adjust\_solvent\_density}}}{\emph{solvent\_file}, \emph{target\_solvent\_density}}{}
+\end{fulllineitems}
+
+\index{build\_directories() (in module simulation)@\spxentry{build\_directories()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{simulation:simulation.build_directories}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{build\_directories}}}{\emph{polymer\_name}, \emph{polymer\_length}, \emph{fresh\_run=False}}{}
@@ -136,6 +142,14 @@ topology\_file ( str ) - The path to a file containing the topology for the pdb\
 
 \end{fulllineitems}
 
+\index{calculate\_solvent\_density() (in module simulation)@\spxentry{calculate\_solvent\_density()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.calculate_solvent_density}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{calculate\_solvent\_density}}}{\emph{solvent\_file}}{}
+Given an input file containing solvent molecules, this function computes the solvent density, in
+
+\end{fulllineitems}
+
 \index{compress\_large\_files() (in module simulation)@\spxentry{compress\_large\_files()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
@@ -145,19 +159,90 @@ topology\_file ( str ) - The path to a file containing the topology for the pdb\
 \index{equilibrate() (in module simulation)@\spxentry{equilibrate()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{simulation:simulation.equilibrate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{equilibrate}}}{}{}
+\phantomsection\label{\detokenize{simulation:simulation.equilibrate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{equilibrate}}}{\emph{run\_directory}, \emph{input\_gro\_file}}{}
+Given an input system, this function performs pressure (Berendsen) equilibration.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{run\_directory}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a directory where the equilibration will be run.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{input\_gro\_file}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a .gro file that will be used for the equilibration run.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\begin{itemize}
+\item {} 
+output\_trajectory ( str ) - The path to a PDB file containing the output for the equilibration run.
+
+\end{itemize}
+
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{get\_box\_volume() (in module simulation)@\spxentry{get\_box\_volume()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.get_box_volume}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{get\_box\_volume}}}{\emph{solvent\_file}}{}
+Given an input file containing data for a simulation box of solvent molecules, this function calculates the box volume.
+
+\end{fulllineitems}
+
+\index{get\_num\_solvent\_molecules() (in module simulation)@\spxentry{get\_num\_solvent\_molecules()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.get_num_solvent_molecules}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{get\_num\_solvent\_molecules}}}{\emph{solvent\_file}}{}
+\end{fulllineitems}
+
+\index{get\_terphenyl\_top\_directory() (in module simulation)@\spxentry{get\_terphenyl\_top\_directory()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.get_terphenyl_top_directory}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{get\_terphenyl\_top\_directory}}}{}{}
+\end{fulllineitems}
+
+\index{make\_topology() (in module simulation)@\spxentry{make\_topology()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.make_topology}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{make\_topology}}}{\emph{polymer\_code}, \emph{num\_solvent\_molecules=0}}{}
 \end{fulllineitems}
 
 \index{minimize() (in module simulation)@\spxentry{minimize()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{simulation:simulation.minimize}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{minimize}}}{\emph{mdrun\_file}, \emph{topology}, \emph{input\_structure}}{}
+\phantomsection\label{\detokenize{simulation:simulation.minimize}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{minimize}}}{\emph{run\_directory}, \emph{topology}, \emph{input\_structure}, \emph{polymer\_code}}{}
+Given a GROMACS .mdp MD commands file, a topology, and an input structure, this function performs a mimimization.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{run\_directory}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a directory where the minimization will be run.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{topology}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a topology file
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{input\_structure}} (\sphinxhref{https://docs.python.org/3/library/functions.html\#type}{\sphinxstyleliteralemphasis{\sphinxupquote{type}}}) \textendash{} The path to an input structure to minimize.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\begin{itemize}
+\item {} 
+minimized\_pdb\_file ( str ) - The path to a PDB file for the minimized structure.
+
+\end{itemize}
+
+
+\end{description}\end{quote}
+
 \end{fulllineitems}
 
 \index{parameterize() (in module simulation)@\spxentry{parameterize()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{simulation:simulation.parameterize}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{parameterize}}}{\emph{param\_directory}, \emph{pdb\_file}, \emph{topology\_file}}{}
+\phantomsection\label{\detokenize{simulation:simulation.parameterize}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{parameterize}}}{\emph{param\_directory}, \emph{pdb\_file}, \emph{topology\_file}, \emph{polymer\_code}, \emph{polymer\_length}}{}
 Given a directory path, PDB file, and a topology file, this function parameterizes the structure with GAFF.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -170,10 +255,30 @@ Given a directory path, PDB file, and a topology file, this function parameteriz
 \item {} 
 \sphinxstyleliteralstrong{\sphinxupquote{topology\_file}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a file containing the topology for the structure that will be parameterized.
 
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{polymer\_code}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}\sphinxstyleliteralemphasis{\sphinxupquote{ (}}\sphinxstyleliteralemphasis{\sphinxupquote{length=3}}\sphinxstyleliteralemphasis{\sphinxupquote{)}}) \textendash{} A three-letter code for the polymer (required for GAFF parameterization, in place of residue codes)
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{polymer\_length}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The length of the input structure (number of monomers).
+
 \end{itemize}
+
+\item[{Returns}] \leavevmode
+\begin{itemize}
+\item {} 
+solute\_gro\_file ( str ) - Path to the GAFF-parameterized .gro file for the input structure.
+
+\end{itemize}
+
 
 \end{description}\end{quote}
 
+\end{fulllineitems}
+
+\index{remove\_random\_molecules() (in module simulation)@\spxentry{remove\_random\_molecules()}\spxextra{in module simulation}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{simulation:simulation.remove_random_molecules}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{remove\_random\_molecules}}}{\emph{solvent\_file}, \emph{num\_molecules\_to\_remove}}{}
 \end{fulllineitems}
 
 \index{replace() (in module simulation)@\spxentry{replace()}\spxextra{in module simulation}}
@@ -207,7 +312,37 @@ Given a file, a target search string, and a replacement string, this function re
 \index{solvate() (in module simulation)@\spxentry{solvate()}\spxextra{in module simulation}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{simulation:simulation.solvate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{solvate}}}{\emph{polymer\_name}, \emph{polymer\_length}, \emph{polymer\_code}, \emph{input\_pdb}, \emph{run\_directory}, \emph{solvent\_density=0.5}}{}
+\phantomsection\label{\detokenize{simulation:simulation.solvate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{simulation.}}\sphinxbfcode{\sphinxupquote{solvate}}}{\emph{solvation\_directory}, \emph{solute\_gro\_file}, \emph{solute\_topology\_file}, \emph{solvent\_file}, \emph{polymer\_code}, \emph{solvent\_density=None}}{}
+Given solute and solvent .gro files, this function produces a combined, solvated .gro file.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{solvation\_directory}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a directory where solvation will be performed.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{solute\_gro\_file}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a .gro file for the solute
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{solute\_topology\_file}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a topology file for the solute.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{solvent\_file}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} The path to a .gro file containing solvent
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{solvent\_density}} (\sphinxhref{https://docs.python.org/3/library/functions.html\#float}{\sphinxstyleliteralemphasis{\sphinxupquote{float}}}) \textendash{} The density for the solvent box.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\begin{itemize}
+\item {} 
+solvated\_gro\_file ( str ) - The path to a .gro file containing the combined, solvated system.
+
+\end{itemize}
+
+
+\end{description}\end{quote}
+
 \end{fulllineitems}
 
 
@@ -231,6 +366,12 @@ Dictionary telling how many atoms of a given element are in each residue
 
 \end{description}
 
+\end{fulllineitems}
+
+\index{get\_end\_to\_end\_distance() (in module analysis)@\spxentry{get\_end\_to\_end\_distance()}\spxextra{in module analysis}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{analysis:analysis.get_end_to_end_distance}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{analysis.}}\sphinxbfcode{\sphinxupquote{get\_end\_to\_end\_distance}}}{\emph{structure}, \emph{atom\_pair}}{}
 \end{fulllineitems}
 
 \index{get\_internal\_coordinate\_definitions() (in module analysis)@\spxentry{get\_internal\_coordinate\_definitions()}\spxextra{in module analysis}}
@@ -267,6 +408,12 @@ polymer\_name: string (ie: “o-terphenyl”)
 
 polymer\_length: string (ie: “monomer”)
 
+\end{fulllineitems}
+
+\index{get\_terminal\_atoms() (in module analysis)@\spxentry{get\_terminal\_atoms()}\spxextra{in module analysis}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{analysis:analysis.get_terminal_atoms}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{analysis.}}\sphinxbfcode{\sphinxupquote{get\_terminal\_atoms}}}{\emph{structure\_file}}{}
 \end{fulllineitems}
 
 \index{read\_trajectory() (in module analysis)@\spxentry{read\_trajectory()}\spxextra{in module analysis}}

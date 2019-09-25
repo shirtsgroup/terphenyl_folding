@@ -1,8 +1,0 @@
-source oldff/leaprc.ff99SB
-source leaprc.gaff
-OCT = loadmol2 octamer.mol2
-check OCT
-loadamberparams octamer.frcmod
-saveoff OCT OCT.lib
-saveamberparm OCT octamer.prmtop octamer.inpcrd
-quit

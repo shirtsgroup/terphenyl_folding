@@ -1,5 +1,5 @@
 ;Forcefield
-#include "gaff/gaff.itp"
+#include "gaff.itp"
 
 ;TMR Topology
 #include "MON.itp"

@@ -5,6 +5,33 @@ import panedr
 import os
 from pymbar import timeseries
 
+def get_terminal_atoms(structure_file):
+    """
+    """
+    first_nitrogen_index = None
+    atom_index = -1
+    atom_pair = []
+    with open(structure_file, "rt") as fin:
+      for line in fin:
+        line_list = [char for char in line]
+        line_start = ''.join(line_list[0:6])
+        if line_start == 'HETATM' or line_start == 'ATOM  ':
+          atom_index = atom_index + 1
+          if line[13] == "N":
+            atom_pair.append(atom_index)
+          if line[13] == "O":
+            last_particle_index = atom_index
+    atom_pair.append(last_particle_index)
+    return(atom_pair)
+
+def get_end_to_end_distance(structure,atom_pair):
+    """
+    """
+    atom_pairs = [atom_pair]
+    traj = md.load(structure)
+    md.compute_distances(traj, atom_pairs, periodic=False, opt=False)
+    return(end_to_end_distance)
+
 def get_phenyl_carbon_indices(polymer_name,polymer_length):
     """
     Parameters

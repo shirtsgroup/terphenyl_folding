@@ -1,9 +1,0 @@
-#Interface settings
-
-#molcharge :   
-    -in  TRI_new.pdb
-    -method  am1bccsym
-    -out  TRI_new.mol2
-    #-param (Not set, no default)
-    #-paramfile (Not set, no default)
-    #-prefix  molcharge

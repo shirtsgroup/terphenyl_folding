@@ -1,9 +1,0 @@
-title = Energy Minimization
-integrator = steep
-nsteps =-1
-cutoff-scheme = verlet
-nstxout = 500
-nstvout = 500
-nstfout = 500
-nstenergy = 500
-nstlist = 40

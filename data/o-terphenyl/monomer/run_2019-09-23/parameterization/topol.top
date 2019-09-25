@@ -1,0 +1,17 @@
+;Forcefield
+#include "/mnt/d/Foldamers/terphenyl_folding/gaff/gaff.itp"
+
+;MONTopology
+#include "/mnt/d/Foldamers/terphenyl_folding/data/o-terphenyl/monomer/run_2019-09-23/parameterization/$POLYMER_CODE.itp"
+
+;TCM Topology
+#include "/mnt/d/Foldamers/terphenyl_folding/setup_files/TCM.itp"
+
+[ system ]
+Simulation Box in water
+
+[ molecules ]
+;Compounds     nmols
+MON                1
+TCM              $NUM_SOLVENT_MOLECULES
+SOL              2353
