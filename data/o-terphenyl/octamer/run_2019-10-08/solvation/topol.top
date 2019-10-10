@@ -1,0 +1,12 @@
+;Forcefield
+#include "gaff.itp"
+
+;OCT Topology
+#include "OCT.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+OCT                1

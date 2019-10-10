@@ -31,6 +31,9 @@ if add_solvent:
   solvation_directory = str(str(run_directory)+"/solvation")
   solvated_gro_file,topology_file = solvate(solvation_directory,solute_gro_file,topology_file,solvent_file,polymer_code,solvent_density=solvent_density)
 
+print("The solvated gro file is: "+str(solvated_gro_file))
+exit()
+
 if run_minimization:
 # Minimize our initial structure
   minimized_pdb_file = minimize(solvation_directory,gaff_itp_file,solvated_gro_file,polymer_code)

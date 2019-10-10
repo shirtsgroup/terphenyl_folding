@@ -1,0 +1,8 @@
+source oldff/leaprc.ff99SB
+source leaprc.gaff
+PEN = loadmol2 pentamer.mol2
+check PEN
+loadamberparams pentamer.frcmod
+saveoff PEN PEN.lib
+saveamberparm PEN pentamer.prmtop pentamer.inpcrd
+quit

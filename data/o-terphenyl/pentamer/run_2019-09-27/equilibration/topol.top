@@ -1,0 +1,13 @@
+;Forcefield
+#include "gaff.itp"
+
+;O- Topology
+#include "PEN.itp"
+#include "SOL.itp"
+[ system ]
+Simulation Box in water
+
+[ molecules ]
+;Compounds     nmols
+PEN                 1
+SOL              3421

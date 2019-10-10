@@ -1,0 +1,16 @@
+;Forcefield
+#include "gaff.itp"
+
+;TMR Topology
+#include "TMR.itp"
+
+;TCM Topology
+#include "TCM.itp"
+
+[ system ]
+Simulation Box
+
+[ molecules ]
+;Compounds     nmols
+TMR                1
+TCM              797

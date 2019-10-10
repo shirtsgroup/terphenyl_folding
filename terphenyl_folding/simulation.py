@@ -1,4 +1,4 @@
-import shutil, os
+import os
 from shutil import copytree, copyfile
 from zipfile import ZipFile
 import subprocess, datetime
@@ -98,7 +98,7 @@ def build_directories(polymer_name,polymer_length,fresh_run=False):
         input_files = str(str(terphenyl_top)+'/input_files/'+str(polymer_name)+'/'+str(polymer_length))
 
         pdb_file = str(str(input_files)+'/'+str(polymer_length)+'.pdb')
-        solvent_file = str(str(input_files)+"/solvent.pdb")
+        solvent_file = str(str(terphenyl_top)+"/input_files/chloroform_box.pdb")
         topology_file = make_topology(polymer_code)
         run_pdb_file = str(str(run_directory)+"/"+str(polymer_length)+".pdb")
         run_topology_file = str(str(run_directory)+"/topol.top")
@@ -223,6 +223,21 @@ def minimize(run_directory,topology,input_structure,polymer_code):
           os.chdir(cwd)
         return(minimized_pdb_file)
 
+def get_box_vectors(file):
+        """
+        Given an input file containing data for a simulation box of solvent molecules, this function calculates the box volume.
+        """
+        box_vectors = [None,None,None]
+        with open(file,"rt") as fin:
+          for line in fin:
+            if line[0:6] == "CRYST1":
+              x_length = float(line[9:14])
+              y_length = float(line[18:23])
+              z_length = float(line[27:33])
+              box_vectors = [x_length,y_length,z_length]
+              return(box_vectors)
+        return(box_vectors)
+
 def get_box_volume(solvent_file):
         """
         Given an input file containing data for a simulation box of solvent molecules, this function calculates the box volume.
@@ -297,7 +312,7 @@ def remove_random_molecules(solvent_file,num_molecules_to_remove):
               #print(molecule_number)
               if molecule_number not in molecules_to_remove:
                if molecule_number != last_molecule_number:
-                last_molecule_number = molecule_number
+                last_molecule_number = num_solvent_molecules
                 num_solvent_molecules = num_solvent_molecules + 1
                line_list = [char for char in line]
                line_list[22:26] = str("{:>4}".format(num_solvent_molecules)).split()
@@ -384,16 +399,25 @@ def solvate(solvation_directory,solute_gro_file,solute_topology_file,solvent_fil
           os.chdir(solvation_directory)
         new_gro_file = str(str(solvation_directory)+"/solute.gro")
         copyfile(solute_gro_file,new_gro_file)
-
         solvated_gro_file = str(str(solvation_directory)+"/solvated.gro")
-        subprocess.run(["gmx","solvate","-cp",new_gro_file,"-cs",solvent_file,"-p",solute_top,"-o",solvated_gro_file])
+        if solvent_density != None:
+          box_vectors = get_box_vectors(solvent_file)
+          box_volume_cubic_angstroms = get_box_volume(solvent_file) # box volume in Angstroms^3
+          liter_conversion = 1.0e-27
+          box_volume_liters = liter_conversion*box_volume_cubic_angstroms
+          target_num_moles_solvent_molecules = box_volume_liters * solvent_density
+          target_num_solvent_molecules = round(target_num_moles_solvent_molecules*6.02e23)
+          print("The box volume is "+str(box_volume_liters)+" Liters.")
+          print("Solvating the molecule in "+str(target_num_solvent_molecules)+" solvent molecules.")
+          subprocess.run(["gmx","solvate","-cp",new_gro_file,"-cs",solvent_file,"-p",solute_top,"-box",str(box_vectors[0]),str(box_vectors[1]),str(box_vectors[2]),"-maxsol",str(target_num_solvent_molecules),"-o",solvated_gro_file])
+        else:
+          subprocess.run(["gmx","solvate","-cp",new_gro_file,"-cs",solvent_file,"-p",solute_top,"-o",solvated_gro_file])
+
         if not os.path.exists(solvated_gro_file):
           print("ERROR: Something went wrong while solvating the molecule.\n")
+          print("The expected output file, "+str(solvated_gro_file)+" does not exist.")
           exit()
-        if solvent_density != None:
-          solvated_gro_file = adjust_solvent_density(solvated_gro_file,solvent_density)
-        num_solvent_molecules = get_num_solvent_molecules(solvated_gro_file)
-        solvated_topology_file = make_topology(polymer_code,num_solvent_molecules=num_solvent_molecules)
+        solvated_topology_file = make_topology(polymer_code,num_solvent_molecules=target_num_solvent_molecules)
         if cwd != solvation_directory:
           os.chdir(cwd)
         return(solvated_gro_file,solvated_topology_file)
